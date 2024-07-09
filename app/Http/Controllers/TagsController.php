@@ -9,6 +9,12 @@ class TagsController extends Controller
 {
     public function store(Request $request)
     {
+        $request->validate([
+            'page_id' => 'required|exists:pages,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
         $tag = Tag::create($request->all());
         return response()->json($tag, 201);
     }
@@ -21,6 +27,11 @@ class TagsController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
         $tag = Tag::findOrFail($id);
         $tag->update($request->all());
         return response()->json($tag);
