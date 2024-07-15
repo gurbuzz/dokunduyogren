@@ -55,6 +55,16 @@
             .form-group button:hover {
                 background: #555;
             }
+            .register-link {
+                display: block;
+                margin-top: 15px;
+                text-align: center;
+                color: #636b6f;
+                text-decoration: none;
+            }
+            .register-link:hover {
+                text-decoration: underline;
+            }
         </style>
     </head>
     <body>
@@ -74,6 +84,7 @@
                     <button type="submit">Login</button>
                 </div>
             </form>
+            <a class="register-link" href="{{ route('register') }}">Don't have an account? Register here</a>
         </div>
     </body>
 </html>
