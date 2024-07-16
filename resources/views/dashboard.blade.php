@@ -24,41 +24,87 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
         }
-        .content p {
-            margin: 0;
-            font-size: 18px;
+        .btn-create, .btn-refresh {
+            margin-bottom: 20px;
+        }
+        .table {
+            margin-top: 20px;
+        }
+        .nav-bar-custom {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-bar-custom .nav-item {
+            margin-right: 20px;
+        }
+        .nav-bar-custom .nav-link {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light nav-bar-custom">
         <a class="navbar-brand" href="#">DokunDuyOgren</a>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <span class="nav-link">{{ Auth::user()->name }}</span>
-                </li>
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Logout</button>
-                    </form>
-                </li>
-            </ul>
+        <div class="navbar-nav">
+            <span class="nav-link">{{ Auth::user()->name }}</span>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Logout</button>
+            </form>
         </div>
     </nav>
     <div class="container">
-        <div class="content">
-            <h2>{{ __('Dashboard') }}</h2>
-            <p>{{ __("You're logged in!") }}</p>
+        <div class="content mt-4">
+            <h2>Sayfa Listesi</h2>
+            <a href="{{ route('pages.create') }}" class="btn btn-success btn-create">Yeni Sayfa Oluştur</a>
+            <button class="btn btn-primary btn-refresh" onclick="location.reload();">Yenile</button>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Sayfa Numarası</th>
+                        <th>Sayfa İsmi</th>
+                        <th>Kategori</th>
+                        <th>Etiketler</th>
+                        <th>İçerik</th>
+                        <th>Resim</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($pages as $page)
+                    <tr>
+                        <td>{{ $page->page_number }}</td>
+                        <td>{{ $page->name }}</td>
+                        <td>{{ $page->category }}</td>
+                        <td>{{ $page->tags }}</td>
+                        <td>{{ $page->content }}</td>
+                        <td><img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 100px;"></td>
+                        <td>
+                            <a href="{{ route('pages.edit', $page->page_id) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                            <form action="{{ route('pages.destroy', $page->page_id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                            <i class="fas fa-language" style="color: grey; cursor: not-allowed;"></i>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.amazonaws.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
