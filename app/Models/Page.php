@@ -12,18 +12,11 @@ class Page extends Model
     protected $primaryKey = 'page_id';
 
     protected $fillable = [
-        'book_id',
-        'page_number',
-        'image_url',
+        'book_id', 'name', 'category', 'tags', 'image_url', 'content', 'page_number'
     ];
 
     public function book()
     {
-        return $this->belongsTo(Book::class, 'book_id', 'book_id');
-    }
-
-    public function tags()
-    {
-        return $this->hasMany(Tag::class, 'page_id', 'page_id');
+        return $this->belongsTo(Book::class, 'book_id', 'id');
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard</title>
+    <title>{{ $book->title }} Sayfa Listesi</title>
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <!-- Bootstrap CSS -->
@@ -54,14 +54,14 @@
             <span class="nav-link">{{ Auth::user()->name }}</span>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Logout</button>
+                <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Çıkış Yap</button>
             </form>
         </div>
     </nav>
     <div class="container">
         <div class="content mt-4">
-            <h2>Sayfa Listesi</h2>
-            <a href="{{ route('pages.create') }}" class="btn btn-success btn-create">Yeni Sayfa Oluştur</a>
+            <h2>{{ $book->title }} - Sayfa Listesi</h2>
+            <a href="{{ route('books.pages.create', $book->id) }}" class="btn btn-success btn-create">Yeni Sayfa Oluştur</a>
             <button class="btn btn-primary btn-refresh" onclick="location.reload();">Yenile</button>
             <table class="table table-striped">
                 <thead>

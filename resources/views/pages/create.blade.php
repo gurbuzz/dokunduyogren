@@ -16,8 +16,18 @@
                         <h2>Yeni Sayfa Oluştur</h2>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('pages.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ isset($bookId) ? route('books.pages.store', ['book' => $bookId]) : route('pages.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            @if (!isset($bookId))
+                                <div class="form-group">
+                                    <label for="book_id">Kitap Seç</label>
+                                    <select class="form-control" id="book_id" name="book_id" required>
+                                        @foreach($books as $book)
+                                            <option value="{{ $book->id }}">{{ $book->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <label for="name">Sayfa İsmi</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
@@ -43,7 +53,7 @@
                                 <input type="number" class="form-control" id="page_number" name="page_number" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Kaydet</button>
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">İptal</a>
+                            <a href="{{ isset($bookId) ? route('books.pages.index', ['book' => $bookId]) : route('dashboard') }}" class="btn btn-secondary">İptal</a>
                         </form>
                     </div>
                 </div>

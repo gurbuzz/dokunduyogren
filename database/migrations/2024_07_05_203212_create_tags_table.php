@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('tags', function (Blueprint $table) {
-            $table->id('tag_id');
+            $table->id('tag_id'); // 'id' yerine 'tag_id' kullanılıyor
             $table->foreignId('page_id')->constrained('pages', 'page_id')->onDelete('cascade');
             $table->string('label');
             $table->float('position_x');

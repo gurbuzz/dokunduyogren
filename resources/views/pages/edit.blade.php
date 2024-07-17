@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label for="image_url">Resim Yükle</label>
                                 <input type="file" class="form-control-file" id="image_url" name="image_url">
-                                <img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 100px; margin-top: 10px;">
+                                <img src="{{ asset('images/' . $page->image_url) }}" alt="Iamage" style="width: 100px; margin-top: 10px;">
                             </div>
                             <div class="form-group">
                                 <label for="content">İçerik</label>
