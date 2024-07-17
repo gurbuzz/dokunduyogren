@@ -12,7 +12,7 @@ class PagesController extends Controller
     {
         $book = Book::findOrFail($bookId);
         $pages = $book->pages; // Belirli bir kitabın sayfalarını al
-        return view('dashboard', compact('pages', 'book'));
+        return view('pages.page_overview', compact('pages', 'book'));
     }
 
     public function create()

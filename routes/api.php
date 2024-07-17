@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BooksController;
+use App\Http\Controllers\BookController;  // Güncelledik
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -11,11 +11,11 @@ Route::post('/users/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/users/logout', [AuthenticatedSessionController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/books', [BooksController::class, 'store']);
-    Route::get('/books', [BooksController::class, 'index']);
-    Route::get('/books/{book_id}', [BooksController::class, 'show']);
-    Route::put('/books/{book_id}', [BooksController::class, 'update']);
-    Route::delete('/books/{book_id}', [BooksController::class, 'destroy']);
+    Route::post('/books', [BookController::class, 'store']);
+    Route::get('/books', [BookController::class, 'index']);
+    Route::get('/books/{book_id}', [BookController::class, 'show']);
+    Route::put('/books/{book_id}', [BookController::class, 'update']);
+    Route::delete('/books/{book_id}', [BookController::class, 'destroy']);
 
     Route::post('/pages', [PagesController::class, 'store']);
     Route::get('/pages/{page_id}', [PagesController::class, 'show']);
