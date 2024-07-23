@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Page;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
+
 
 class PagesController extends Controller
 {
@@ -21,7 +26,7 @@ class PagesController extends Controller
         return view('pages.create', compact('books'));
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -30,25 +35,28 @@ class PagesController extends Controller
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
             'page_number' => 'required|integer',
-            'book_id' => 'required|exists:books,id', // Kitap ID'si doğrulaması
+            'book_id' => 'required|exists:books,id',
         ]);
 
-        $imageName = time().'.'.$request->image_url->extension();  
-        $request->image_url->move(public_path('images'), $imageName);
+        $imageName = time().'.'.$request->image_url->getClientOriginalExtension();  
+        $request->image_url->storeAs('public/images', $imageName);
 
-        $page = new Page;
-        $page->name = $request->name;
-        $page->category = $request->category;
-        $page->tags = $request->tags;
-        $page->image_url = $imageName;
-        $page->content = $request->content;
-        $page->page_number = $request->page_number;
-        $page->book_id = $request->book_id; // Kitap ID'sini ekleyin
-        $page->save();
+        $pageData = [
+            'name' => $request->name,
+            'category' => $request->category,
+            'tags' => $request->tags,
+            'image_url' => $imageName,
+            'content' => $request->content,
+            'page_number' => $request->page_number,
+            'book_id' => $request->book_id
+        ];
 
-        return redirect()->route('books.pages.index', $page->book_id)->with('success', 'Sayfa başarıyla oluşturuldu.');
+        // Form verilerini URL üzerinden yönlendirmek
+        return redirect()->route('pages.create.qrcode', $pageData);
     }
 
+    
+    
     public function edit($id)
     {
         $page = Page::findOrFail($id);
@@ -99,8 +107,10 @@ class PagesController extends Controller
 
     public function createForBook($bookId)
     {
-        return view('pages.create', compact('bookId'));
+        $book = Book::findOrFail($bookId);
+        return view('pages.create', compact('book'));
     }
+
 
     public function storeForBook(Request $request, $bookId)
     {
@@ -116,16 +126,62 @@ class PagesController extends Controller
         $imageName = time().'.'.$request->image_url->extension();  
         $request->image_url->move(public_path('images'), $imageName);
 
-        $page = new Page;
-        $page->book_id = $bookId; // Kitap ID'sini ekleyin
-        $page->name = $request->name;
-        $page->category = $request->category;
-        $page->tags = $request->tags;
-        $page->image_url = $imageName;
-        $page->content = $request->content;
-        $page->page_number = $request->page_number;
+        $pageData = [
+            'name' => $request->name,
+            'category' => $request->category,
+            'tags' => $request->tags,
+            'image_url' => $imageName,
+            'content' => $request->content,
+            'page_number' => $request->page_number,
+            'book_id' => $bookId
+        ];
+
+        return redirect()->route('pages.create.qrcode', $pageData);
+    }
+
+
+    public function createQRCode(Request $request)
+    {
+        $pageData = $request->all(); // Tüm URL parametrelerini al
+    
+        if (empty($pageData)) {
+            Log::error('URL parameters are missing');
+            return back()->withErrors('Gerekli bilgiler bulunamadı. Lütfen tekrar deneyiniz.');
+        }
+        
+        return view('pages.create_qrcode', compact('pageData'));
+    }
+    
+
+
+    public function storeQRCode(Request $request)
+    {
+        $pageData = $request->all();
+
+        // QR kod resmini işle
+        $qrImage = $request->file('qr_image');
+        if (!$qrImage) {
+            return back()->withErrors('QR kodu resmi gereklidir.');
+        }
+
+        // Resim ve QR kodunu işle
+        $pageImagePath = public_path('images/' . $pageData['image_url']);
+
+        // Intervention Image v3 kullanımı
+        $manager = new ImageManager(new Driver());
+        $pageImage = $manager->read($pageImagePath);
+        $qrCode = $manager->read($qrImage->getPathname())->resize(150, 150);
+
+        $pageImage->place($qrCode, 'top-left', 10, 10);
+        $pageImage->save($pageImagePath); // Güncellenmiş resmi kaydet
+
+        // Veritabanı kaydı
+        $page = new Page($pageData);
         $page->save();
 
-        return redirect()->route('books.pages.index', $bookId)->with('success', 'Sayfa başarıyla oluşturuldu.');
+        return redirect()->route('books.pages.index', ['book' => $page->book_id])
+            ->with('success', 'Sayfa başarıyla oluşturuldu ve QR kod eklendi.');
     }
+    
+    
 }

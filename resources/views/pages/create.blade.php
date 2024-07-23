@@ -8,6 +8,16 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -16,18 +26,8 @@
                         <h2>Yeni Sayfa Oluştur</h2>
                     </div>
                     <div class="card-body">
-                        <form action="{{ isset($bookId) ? route('books.pages.store', ['book' => $bookId]) : route('pages.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('books.pages.store', ['book' => $book->id]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            @if (!isset($bookId))
-                                <div class="form-group">
-                                    <label for="book_id">Kitap Seç</label>
-                                    <select class="form-control" id="book_id" name="book_id" required>
-                                        @foreach($books as $book)
-                                            <option value="{{ $book->id }}">{{ $book->title }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endif
                             <div class="form-group">
                                 <label for="name">Sayfa İsmi</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
@@ -52,8 +52,8 @@
                                 <label for="page_number">Sayfa Numarası</label>
                                 <input type="number" class="form-control" id="page_number" name="page_number" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Kaydet</button>
-                            <a href="{{ isset($bookId) ? route('books.pages.index', ['book' => $bookId]) : route('dashboard') }}" class="btn btn-secondary">İptal</a>
+                            <button type="submit" class="btn btn-primary">İleri</button>
+                            <a href="{{ route('books.pages.index', ['book' => $book->id]) }}" class="btn btn-secondary">İptal</a>
                         </form>
                     </div>
                 </div>
@@ -64,6 +64,6 @@
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.amazonaws.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
