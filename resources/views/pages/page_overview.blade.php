@@ -76,25 +76,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pages as $page)
-                    <tr>
-                        <td>{{ $page->page_number }}</td>
-                        <td>{{ $page->name }}</td>
-                        <td>{{ $page->category }}</td>
-                        <td>{{ $page->tags }}</td>
-                        <td>{{ $page->content }}</td>
-                        <td><img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 100px;"></td>
-                        <td>
-                            <a href="{{ route('pages.edit', $page->page_id) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-                            <form action="{{ route('pages.destroy', $page->page_id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                            </form>
-                            <i class="fas fa-language" style="color: grey; cursor: not-allowed;"></i>
-                        </td>
-                    </tr>
-                    @endforeach
+                @foreach ($pages as $page)
+                <tr>
+                    <td>{{ $page->page_number }}</td>
+                    <td>{{ $page->name }}</td>
+                    <td>{{ $page->category }}</td>
+                    <td>{{ $page->tags }}</td>
+                    <td>{{ $page->content }}</td>
+                    <td><img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 100px;"></td>
+                    <td>
+                    <a href="{{ route('pages.edit', $page->page_id) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                        <form action="{{ route('pages.destroy', $page->page_id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                        <i class="fas fa-language" style="color: grey; cursor: not-allowed;"></i>
+                    </td>
+                </tr>
+                @endforeach
+
+
                 </tbody>
             </table>
         </div>

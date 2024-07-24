@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label for="image_url">Resim Yükle</label>
                                 <input type="file" class="form-control-file" id="image_url" name="image_url">
-                                <img src="{{ asset('images/' . $page->image_url) }}" alt="Iamage" style="width: 100px; margin-top: 10px;">
+                                <img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 100%; height: auto; margin-top: 10px;">
                             </div>
                             <div class="form-group">
                                 <label for="content">İçerik</label>
@@ -45,7 +45,7 @@
                                 <input type="number" class="form-control" id="page_number" name="page_number" value="{{ $page->page_number }}" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Güncelle</button>
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">İptal</a>
+                            <a href="{{ route('books.pages.index', $page->book_id) }}" class="btn btn-secondary">İptal</a>
                         </form>
                     </div>
                 </div>

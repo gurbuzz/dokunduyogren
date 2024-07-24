@@ -25,6 +25,11 @@ class PagesController extends Controller
         $books = Book::all(); // Kitap listesini al
         return view('pages.create', compact('books'));
     }
+    
+    public function edit(Page $page)
+    {
+        return view('pages.edit', compact('page'));
+    }
 
         public function store(Request $request)
     {
@@ -57,14 +62,7 @@ class PagesController extends Controller
 
     
     
-    public function edit($id)
-    {
-        $page = Page::findOrFail($id);
-        $books = Book::all(); // Kitap listesini al
-        return view('pages.edit', compact('page', 'books'));
-    }
-
-    public function update(Request $request, $id)
+        public function update(Request $request, Page $page)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -72,10 +70,9 @@ class PagesController extends Controller
             'tags' => 'required|string|max:255',
             'content' => 'required|string',
             'page_number' => 'required|integer',
-            'book_id' => 'required|exists:books,id', // Kitap ID'si doğrulaması
+            'book_id' => 'required|exists:books,id',
         ]);
 
-        $page = Page::findOrFail($id);
         if ($request->hasFile('image_url')) {
             $request->validate([
                 'image_url' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -91,19 +88,20 @@ class PagesController extends Controller
             'tags' => $request->tags,
             'content' => $request->content,
             'page_number' => $request->page_number,
-            'book_id' => $request->book_id, // Kitap ID'sini güncelleyin
+            'book_id' => $request->book_id,
         ]);
 
         return redirect()->route('books.pages.index', $page->book_id)->with('success', 'Sayfa başarıyla güncellendi.');
     }
 
-    public function destroy($id)
+    public function destroy(Page $page)
     {
-        $page = Page::findOrFail($id);
         $bookId = $page->book_id;
         $page->delete();
         return redirect()->route('books.pages.index', $bookId)->with('success', 'Sayfa başarıyla silindi.');
     }
+
+    
 
     public function createForBook($bookId)
     {
@@ -170,9 +168,9 @@ class PagesController extends Controller
         // Intervention Image v3 kullanımı
         $manager = new ImageManager(new Driver());
         $pageImage = $manager->read($pageImagePath);
-        $qrCode = $manager->read($qrImage->getPathname())->resize(150, 150);
+        $qrCode = $manager->read($qrImage->getPathname())->resize(400,400);
 
-        $pageImage->place($qrCode, 'top-left', 10, 10);
+        $pageImage->place($qrCode, 'top-left', 50, 50);
         $pageImage->save($pageImagePath); // Güncellenmiş resmi kaydet
 
         // Veritabanı kaydı
