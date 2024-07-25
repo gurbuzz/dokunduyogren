@@ -16,7 +16,10 @@
                         <h2>QR Kod Ekle</h2>
                     </div>
                     <div class="card-body">
-                       <form action="{{ route('pages.store.qrcode') }}" method="POST" enctype="multipart/form-data">
+                        <h3>{{ $page->name }}</h3>
+                        <p>{{ $page->content }}</p>
+                        <img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 50%; height: auto; margin-top: 5px;">
+                        <form action="{{ route('pages.store.qrcode', ['page' => $page->page_id]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="qr_image">QR Kod Resmi Yükle:</label>
@@ -26,26 +29,22 @@
                                 <label for="description">Açıklama:</label>
                                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                             </div>
-                            @foreach ($pageData as $key => $value)
-                               <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                            @endforeach
                             <button type="submit" class="btn btn-primary">QR Kodu Kaydet</button>
                         </form>
                     </div>
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger mt-3">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-    
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
