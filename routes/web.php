@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\TagsController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,7 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
     Route::get('/books/{id}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::patch('/books/{id}', [BookController::class, 'update'])->name('books.update');
+
     Route::delete('/books/{id}', [BookController::class, 'destroy'])->name('books.destroy');
+    Route::get('/pages/{page}/add_tags', [TagsController::class, 'create'])->name('pages.add_tags');
+    Route::post('/pages/{page}/store_tags', [TagsController::class, 'storeTags'])->name('pages.store_tags');
+    Route::get('/pages/{page}/label_tags', [TagsController::class, 'label'])->name('pages.label_tags');
+    Route::post('/pages/{page}/store_labels', [TagsController::class, 'labelStore'])->name('pages.store_labels');
+
 });
 
 require __DIR__.'/auth.php';

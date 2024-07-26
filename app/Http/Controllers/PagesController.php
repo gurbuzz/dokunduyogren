@@ -163,7 +163,7 @@ class PagesController extends Controller
         $pageImage->place($qrCode, 'top-left', 50, 50);
         $pageImage->save($pageImagePath); // Güncellenmiş resmi kaydet
 
-        return redirect()->route('books.pages.index', ['book' => $page->book_id])
+        return redirect()->route('pages.add_tags', ['page' => $page->page_id])
             ->with('success', 'Sayfa başarıyla oluşturuldu ve QR kod eklendi.');
     }
 }

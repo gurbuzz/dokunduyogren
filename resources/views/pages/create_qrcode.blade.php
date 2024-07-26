@@ -19,6 +19,8 @@
                         <h3>{{ $page->name }}</h3>
                         <p>{{ $page->content }}</p>
                         <img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 50%; height: auto; margin-top: 5px;">
+                        
+                        <!-- QR Kod Kaydetme Formu -->
                         <form action="{{ route('pages.store.qrcode', ['page' => $page->page_id]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
@@ -30,6 +32,11 @@
                                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">QR Kodu Kaydet</button>
+                        </form>
+
+                        <!-- Etiket Ekleme Formu -->
+                        <form action="{{ route('pages.add_tags', ['page' => $page->page_id]) }}" method="GET" style="margin-top: 10px;">
+                            <button type="submit" class="btn btn-primary">Next</button>
                         </form>
                     </div>
                 </div>
