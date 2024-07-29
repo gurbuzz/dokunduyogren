@@ -43,47 +43,49 @@ class TagsController extends Controller
         Tag::destroy($id);
         return response()->json(null, 204);
     }
+    
     public function create($page_id)
     {
         $page = Page::findOrFail($page_id);
         return view('tags.create', compact('page'));
     }
 
-    public function storeTags(Request $request, $pageId)
+    public function storeTags(Request $request, $page_id)
     {
         $coordinates = rtrim($request->coordinates, ';');
         $coordsArray = explode(';', $coordinates);
-    
+
         foreach ($coordsArray as $coord) {
             list($x, $y, $width, $height) = explode(',', $coord);
             Tag::create([
-                'page_id' => $pageId,
+                'page_id' => $page_id,
                 'position_x' => $x,
                 'position_y' => $y,
                 'width' => $width,
                 'height' => $height,
                 'label' => ''
             ]);
-        } 
-        return redirect()->route('pages.label_tags', ['page' => $pageId]);
+        }
+
+        return redirect()->route('pages.label_tags', ['page' => $page_id]);
     }
 
-    public function label($pageId)
+    public function label($page_id)
     {
-        $tags = Tag::where('page_id', $pageId)->where('label', '')->get();
+        $tags = Tag::where('page_id', $page_id)->where('label', '')->get();
         return view('tags.label', compact('tags'));
     }
 
-
-    public function labelStore(Request $request, $pageId)
+    public function labelStore(Request $request, $page_id)
     {
         foreach ($request->tags as $id => $description) {
             $tag = Tag::find($id);
             $tag->label = $description;
             $tag->save();
         }
-    
-        return redirect()->route('pages.index')->with('success', 'Etiketler başarıyla kaydedildi.');
+
+        return redirect()->route('books.pages.index', ['book' => Page::find($page_id)->book_id])
+            ->with('success', 'Etiketler başarıyla kaydedildi.');
     }
     
 }
