@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Sayfa rotaları
-    Route::get('/pages/create', [PagesController::class, 'create'])->name('pages.create');
+    Route::get('/pages/create/{book}', [PagesController::class, 'create'])->name('pages.create');
     Route::post('/pages', [PagesController::class, 'store'])->name('pages.store');
     Route::get('/pages/{page}/edit', [PagesController::class, 'edit'])->name('pages.edit');
     Route::patch('/pages/{page}', [PagesController::class, 'update'])->name('pages.update');
@@ -45,7 +45,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/pages/{page}/store_tags', [TagsController::class, 'storeTags'])->name('pages.store_tags');
     Route::get('/pages/{page}/label_tags', [TagsController::class, 'label'])->name('pages.label_tags');
     Route::post('/pages/{page}/store_labels', [TagsController::class, 'labelStore'])->name('pages.store_labels');
-
 });
 
 require __DIR__.'/auth.php';

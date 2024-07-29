@@ -16,7 +16,7 @@
                         <h2>Etiket Bilgisi Gir</h2>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('pages.store_labels', ['page_id' => $tags->first()->page_id]) }}" method="POST">
+                        <form action="{{ route('pages.store_labels', ['page' => $tags->first()->page_id]) }}" method="POST">
                             @csrf
                             @foreach($tags as $tag)
                                 <div class="form-group">

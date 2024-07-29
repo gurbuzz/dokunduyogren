@@ -16,6 +16,8 @@ class Tag extends Model
         'label',
         'position_x',
         'position_y',
+        'width',
+        'height',
     ];
 
     public function page()

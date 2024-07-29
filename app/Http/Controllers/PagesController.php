@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Models\Book;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
@@ -18,11 +19,13 @@ class PagesController extends Controller
         return view('pages.page_overview', compact('pages', 'book'));
     }
 
-    public function create()
+    public function create($bookId)
     {
-        $books = Book::all(); // Kitap listesini al
-        return view('pages.create', compact('books'));
+        $book = Book::findOrFail($bookId);
+        return view('pages.create', compact('book'));
     }
+    
+    
 
     public function edit(Page $page)
     {
@@ -133,12 +136,13 @@ class PagesController extends Controller
         return redirect()->route('pages.create.qrcode', ['page' => $page->page_id]);
     }
 
-    public function createQRCode(Page $page)
+    public function createQRCode($pageId)
     {
-        Log::info('Page ID in createQRCode: ' . $page->page_id);
-        return view('pages.create_qrcode', compact('page'));
+        $page = Page::findOrFail($pageId);
+        $tags = Tag::where('page_id', $pageId)->get();
+        return view('pages.create_qrcode', compact('page', 'tags'));
     }
-
+    
     public function storeQRCode(Request $request, Page $page)
     {
         $request->validate([

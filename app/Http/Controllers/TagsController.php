@@ -49,37 +49,41 @@ class TagsController extends Controller
         return view('tags.create', compact('page'));
     }
 
-    public function storeTags(Request $request, $page_id)
+    public function storeTags(Request $request, $pageId)
     {
         $coordinates = rtrim($request->coordinates, ';');
         $coordsArray = explode(';', $coordinates);
-
+    
         foreach ($coordsArray as $coord) {
-            list($x, $y) = explode(',', $coord);
+            list($x, $y, $width, $height) = explode(',', $coord);
             Tag::create([
-                'page_id' => $page_id,
+                'page_id' => $pageId,
                 'position_x' => $x,
                 'position_y' => $y,
+                'width' => $width,
+                'height' => $height,
+                'label' => ''
             ]);
-        }
-
-        return redirect()->route('pages.label_tags', ['page_id' => $page_id]);
+        } 
+        return redirect()->route('pages.label_tags', ['page' => $pageId]);
     }
 
-    public function label($page_id)
+    public function label($pageId)
     {
-        $tags = Tag::where('page_id', $page_id)->whereNull('label')->get();
+        $tags = Tag::where('page_id', $pageId)->where('label', '')->get();
         return view('tags.label', compact('tags'));
     }
 
-    public function labelStore(Request $request, $page_id)
+
+    public function labelStore(Request $request, $pageId)
     {
         foreach ($request->tags as $id => $description) {
             $tag = Tag::find($id);
             $tag->label = $description;
             $tag->save();
         }
-
+    
         return redirect()->route('pages.index')->with('success', 'Etiketler başarıyla kaydedildi.');
     }
+    
 }
