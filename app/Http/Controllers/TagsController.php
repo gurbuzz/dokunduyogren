@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\Page;
-
+use Illuminate\Support\Facades\Log;
 
 class TagsController extends Controller
 {
@@ -43,32 +44,35 @@ class TagsController extends Controller
         Tag::destroy($id);
         return response()->json(null, 204);
     }
-    
+
     public function create($page_id)
     {
         $page = Page::findOrFail($page_id);
         return view('tags.create', compact('page'));
     }
 
-    public function storeTags(Request $request, $page_id)
-    {
-        $coordinates = rtrim($request->coordinates, ';');
-        $coordsArray = explode(';', $coordinates);
+  public function storeTags(Request $request, $page_id)
+{
+    $coordinates = json_decode($request->coordinates, true);
 
-        foreach ($coordsArray as $coord) {
-            list($x, $y, $width, $height) = explode(',', $coord);
-            Tag::create([
+    foreach ($coordinates as $coord) {
+        Tag::updateOrCreate(
+            [
                 'page_id' => $page_id,
-                'position_x' => $x,
-                'position_y' => $y,
-                'width' => $width,
-                'height' => $height,
-                'label' => ''
-            ]);
-        }
-
-        return redirect()->route('pages.label_tags', ['page' => $page_id]);
+                'position_x' => $coord['x'],
+                'position_y' => $coord['y'],
+                'width' => $coord['width'],
+                'height' => $coord['height']
+            ],
+            [
+                'label' => $coord['label'] ?? ''
+            ]
+        );
     }
+
+    return response()->json(['message' => 'Etiketler başarıyla kaydedildi.'], 200);
+}
+
 
     public function label($page_id)
     {
@@ -87,5 +91,13 @@ class TagsController extends Controller
         return redirect()->route('books.pages.index', ['book' => Page::find($page_id)->book_id])
             ->with('success', 'Etiketler başarıyla kaydedildi.');
     }
+        public function showTags($pageId)
+    {
+        $page = Page::findOrFail($pageId);
+        $tags = Tag::where('page_id', $pageId)->get();
+
+        return view('tags.show_tags', compact('tags', 'page'));
+    }
+
     
 }

@@ -170,4 +170,5 @@ class PagesController extends Controller
         return redirect()->route('pages.add_tags', ['page' => $page->page_id])
             ->with('success', 'Sayfa başarıyla oluşturuldu ve QR kod eklendi.');
     }
+
 }

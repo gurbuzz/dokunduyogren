@@ -10,9 +10,11 @@ return new class extends Migration {
         Schema::create('tags', function (Blueprint $table) {
             $table->id('tag_id'); // 'id' yerine 'tag_id' kullanılıyor
             $table->foreignId('page_id')->constrained('pages', 'page_id')->onDelete('cascade');
-            $table->string('label');
+            $table->string('label')->nullable(); // Boş olabilir olarak ayarladık
             $table->float('position_x');
             $table->float('position_y');
+            $table->float('width'); // Genişlik alanı
+            $table->float('height'); // Yükseklik alanı
             $table->timestamps();
         });
     }

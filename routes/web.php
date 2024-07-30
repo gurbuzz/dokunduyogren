@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pages/{page}/edit', [PagesController::class, 'edit'])->name('pages.edit');
     Route::patch('/pages/{page}', [PagesController::class, 'update'])->name('pages.update');
     Route::delete('/pages/{page}', [PagesController::class, 'destroy'])->name('pages.destroy');
-
+    Route::get('/pages/{page}/tags', [TagsController::class, 'showTags'])->name('pages.show_tags');
     // Belirli bir kitap için sayfa oluşturma ve QR kod ekleme
     Route::get('/books/{book}/pages/create', [PagesController::class, 'createForBook'])->name('books.pages.create');
     Route::post('/books/{book}/pages', [PagesController::class, 'storeForBook'])->name('books.pages.store');
