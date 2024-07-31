@@ -24,6 +24,23 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="tagModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tagModalLabel">Etiket Bilgisi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="tagContent"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         var canvas = new fabric.Canvas('c', {
             hoverCursor: 'pointer',
@@ -39,7 +56,6 @@
             canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
         });
 
-        // Adding rectangles for each tag
         @foreach($tags as $tag)
         (function() {
             var rect = new fabric.Rect({
@@ -49,22 +65,23 @@
                 height: {{ $tag->height }},
                 fill: 'rgba(255, 0, 0, 0.5)',
                 hasControls: false,
-                hasBorders: false
+                hasBorders: false,
+                selectable: true,
+                evented: true
             });
             rect.data = { label: "{{ $tag->label }}" };
             canvas.add(rect);
 
-            // Adding click event on each rectangle
             rect.on('mousedown', function() {
-                alert('Label: ' + rect.data.label);
-                // Implement modal logic or any other interaction here
+                document.getElementById('tagContent').innerText = rect.data.label;
+                $('#tagModal').modal('show');
             });
         })();
         @endforeach
 
         canvas.on('mouse:down', function(options) {
-            if (options.target) {
-                canvas.setActiveObject(options.target);
+            if (!options.target) {
+                canvas.discardActiveObject().renderAll();
             }
         });
     </script>

@@ -78,6 +78,7 @@
 
         var rect, isDown, origX, origY;
         var selectedAreas = [];
+        var currentRect = null;
 
         canvas.on('mouse:down', function(o) {
             if (!canvas.getActiveObject()) {
@@ -112,19 +113,20 @@
         canvas.on('mouse:up', function() {
             isDown = false;
             selectedAreas.push(rect);
-            rect.on('selected', function() {
-                $('#labelModal').modal('show');
-                document.getElementById('labelInput').value = rect.get('label') || '';
-                document.getElementById('saveLabel').onclick = function() {
-                    var labelValue = document.getElementById('labelInput').value;
-                    if (labelValue) {
-                        rect.set('label', labelValue);
-                        $('#labelModal').modal('hide');
-                        canvas.renderAll();
-                    }
-                };
-            });
+            currentRect = rect;
+            $('#labelModal').modal('show');
+            document.getElementById('labelInput').value = '';
             canvas.setActiveObject(rect);
+        });
+
+        document.getElementById('saveLabel').addEventListener('click', function() {
+            var labelValue = document.getElementById('labelInput').value;
+            if (labelValue && currentRect) {
+                currentRect.set('label', labelValue);
+                $('#labelModal').modal('hide');
+                canvas.renderAll();
+                currentRect = null;
+            }
         });
 
         document.getElementById('saveButton').addEventListener('click', function() {
@@ -195,16 +197,9 @@
         // Her bir alan tıklanabilir ve silinebilir olmalıdır
         selectedAreas.forEach(function(area) {
             area.on('selected', function() {
+                currentRect = area;
                 $('#labelModal').modal('show');
                 document.getElementById('labelInput').value = area.get('label') || '';
-                document.getElementById('saveLabel').onclick = function() {
-                    var labelValue = document.getElementById('labelInput').value;
-                    if (labelValue) {
-                        area.set('label', labelValue);
-                        $('#labelModal').modal('hide');
-                        canvas.renderAll();
-                    }
-                };
             });
         });
     </script>
