@@ -33,6 +33,11 @@
                             </div>
                             <button type="submit" class="btn btn-primary">QR Kodu Kaydet</button>
                         </form>
+
+                        <!-- Etiket Ekleme Formu -->
+                        <form action="{{ route('pages.add_tags', ['page' => $page->page_id]) }}" method="GET" style="margin-top: 10px;">
+                            <button type="submit" class="btn btn-primary">Next</button>
+                        </form>
                     </div>
                 </div>
                 @if ($errors->any())

@@ -43,15 +43,18 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light nav-bar-custom">
-        <a class="navbar-brand" href="#">DokunDuyOgren</a>
-        <div class="navbar-nav">
+        <a class="navbar-brand" href="{{ url('/') }}">DokunDuyOgren</a>
+        <div class="navbar-nav ml-auto">
             <span class="nav-link">{{ Auth::user()->name }}</span>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}" class="form-inline">
                 @csrf
                 <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Çıkış Yap</button>
             </form>
         </div>
     </nav>
+    
+    
+    
 
     <div class="container mt-5">
         <h2>Kitap Listesi</h2>

@@ -145,28 +145,34 @@ class PagesController extends Controller
     
     public function storeQRCode(Request $request, Page $page)
     {
+        // Dosya boyutu ve formatını kontrol eden validasyon
         $request->validate([
             'qr_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'qr_image.max' => 'Yüklenen dosya boyutu 2MB\'ı aşmamalıdır.',
         ]);
-
+    
+        // Bellek limitini artırma
+        ini_set('memory_limit', '256M');
+    
         // QR kod resmini işle
         $qrImage = $request->file('qr_image');
         if (!$qrImage) {
             return back()->withErrors('QR kodu resmi gereklidir.');
         }
-
+    
         // Resim ve QR kodunu işle
         $pageImagePath = public_path('images/' . $page->image_url);
-
+    
         // Intervention Image v3 kullanımı
         $manager = new ImageManager(new Driver());
         $pageImage = $manager->read($pageImagePath);
         $qrCode = $manager->read($qrImage->getPathname());
         $qrCode->resize(400, 400); 
-
+    
         $pageImage->place($qrCode, 'top-left', 50, 50);
         $pageImage->save($pageImagePath); // Güncellenmiş resmi kaydet
-
+    
         return redirect()->route('pages.add_tags', ['page' => $page->page_id])
             ->with('success', 'Sayfa başarıyla oluşturuldu ve QR kod eklendi.');
     }
