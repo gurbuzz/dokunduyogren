@@ -39,6 +39,12 @@
         .nav-bar-custom .nav-link {
             font-weight: bold;
         }
+        .panel {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -52,17 +58,15 @@
             </form>
         </div>
     </nav>
-    
-    
-    
 
-    <div class="container mt-5">
+    <div class="container mt-5 panel">
         <h2>Kitap Listesi</h2>
         <a href="{{ route('books.create') }}" class="btn btn-success mb-3">Yeni Kitap Ekle</a>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Başlık</th>
+                    <th>Kapak Resmi</th>
+                    <th>Kİtap Adı</th>
                     <th>Yazar</th>
                     <th>Yayın Tarihi</th>
                     <th>İşlemler</th>
@@ -71,6 +75,7 @@
             <tbody>
                 @foreach ($books as $book)
                 <tr>
+                    <td><img src="{{ asset('images/' . $book->cover_image) }}" alt="Kapak Resmi" style="width: 150px; height: 100px;"></td>
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->author }}</td>
                     <td>{{ $book->published_date }}</td>
@@ -92,6 +97,6 @@
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.amazonaws.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

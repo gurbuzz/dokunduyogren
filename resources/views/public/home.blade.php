@@ -12,42 +12,88 @@
             font-family: 'Figtree', sans-serif;
             background-color: #f8fafc;
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
         .container {
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 56px); /* Navbar yüksekliğini çıkaralım */
+        }
+        .links {
+            margin-bottom: 20px;
         }
         .links > a {
             color: #636b6f;
-            padding: 0 25px;
-            font-size: 13px;
+            padding: 10px 25px;
+            font-size: 16px;
             font-weight: 600;
             letter-spacing: .1rem;
             text-decoration: none;
             text-transform: uppercase;
+            background-color: #fff;
+            border: 2px solid #636b6f;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .links > a:hover {
+            background-color: #636b6f;
+            color: #fff;
+        }
+        h1 {
+            font-size: 36px;
+            margin-top: 20px;
+            color: #222;
+        }
+        h2 {
+            font-size: 24px;
+            color: #555;
         }
     </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="links">
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ url('/books') }}">Kitap Listesi</a>
-                @else
-                    <a href="{{ route('login') }}">Log in</a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">Register</a>
-                    @endif
-                @endauth
-            @endif
+    <nav class="navbar navbar-expand-lg navbar-light bg-light nav-bar-custom">
+        <a class="navbar-brand" href="{{ url('/') }}">DokunDuyOgren</a>
+        <div class="navbar-nav ml-auto">
+            @auth
+                <span class="nav-link">{{ Auth::user()->name }}</span>
+                <form method="POST" action="{{ route('logout') }}" class="form-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Çıkış Yap</button>
+                </form>
+            @else
+                <a class="nav-link" href="{{ route('login') }}">Giriş Yap</a>
+                @if (Route::has('register'))
+                    <a class="nav-link" href="{{ route('register') }}">Kayıt Ol</a>
+                @endif
+            @endauth
         </div>
-        <h1>Welcome to DokunDuyOgren Project</h1>
+    </nav>
+
+    <div class="container">
+        @auth
+            <div class="links">
+                <a href="{{ url('/books') }}">Kitap Listesi</a>
+            </div>
+        @else
+            <h2>Giriş Yapınız</h2>
+        @endauth
+        <h1>DokunDuyOgren</h1>
     </div>
+
+    <!-- Bootstrap JS (Optional, for better responsiveness) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

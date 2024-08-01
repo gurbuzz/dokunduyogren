@@ -19,17 +19,26 @@
             max-width: 600px;
             margin: 30px auto;
         }
+        .instruction {
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: center;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
                         <h2>Etiket Ekle</h2>
                     </div>
                     <div class="card-body">
+                        <p class="instruction">
+                            Etiket eklemek için, resim üzerinde bir alan seçin ve etiket bilgilerini girin. Seçilen alanları kaydetmek için "Kaydet" butonuna, silmek için "Seçilen Alanı Sil" butonuna tıklayın. İşlemi bitirmek için "Bitir" butonuna tıklayın.
+                        </p>
                         <div class="canvas-container">
                             <canvas id="c" width="800" height="600"></canvas>
                         </div>

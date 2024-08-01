@@ -12,8 +12,9 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h2>Sayfa Oluştur</h2>
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary">Geri</a>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('books.pages.store', ['book' => $book->id]) }}" method="POST" enctype="multipart/form-data">
@@ -53,6 +54,5 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
 </body>
 </html>

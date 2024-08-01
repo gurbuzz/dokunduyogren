@@ -73,24 +73,6 @@ class TagsController extends Controller
     return response()->json(['message' => 'Etiketler başarıyla kaydedildi.'], 200);
 }
 
-
-    public function label($page_id)
-    {
-        $tags = Tag::where('page_id', $page_id)->where('label', '')->get();
-        return view('tags.label', compact('tags'));
-    }
-
-    public function labelStore(Request $request, $page_id)
-    {
-        foreach ($request->tags as $id => $description) {
-            $tag = Tag::find($id);
-            $tag->label = $description;
-            $tag->save();
-        }
-
-        return redirect()->route('books.pages.index', ['book' => Page::find($page_id)->book_id])
-            ->with('success', 'Etiketler başarıyla kaydedildi.');
-    }
         public function showTags($pageId)
     {
         $page = Page::findOrFail($pageId);

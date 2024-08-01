@@ -43,8 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/books/{id}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/pages/{page}/add_tags', [TagsController::class, 'create'])->name('pages.add_tags');
     Route::post('/pages/{page}/store_tags', [TagsController::class, 'storeTags'])->name('pages.store_tags');
-    Route::get('/pages/{page}/label_tags', [TagsController::class, 'label'])->name('pages.label_tags');
-    Route::post('/pages/{page}/store_labels', [TagsController::class, 'labelStore'])->name('pages.store_labels');
+
 });
 
 require __DIR__.'/auth.php';

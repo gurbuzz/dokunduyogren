@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register</title>
+    <title>Kayıt Ol</title>
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <!-- Styles -->
@@ -65,13 +65,13 @@
 </head>
 <body>
     <div class="container">
-        <h2>Register</h2>
+        <h2>Kayıt Ol</h2>
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
             <!-- Name -->
             <div class="form-group">
-                <label for="name">Name</label>
+                <label for="name">İsim</label>
                 <input type="text" id="name" name="name" :value="old('name')" required autofocus autocomplete="name">
                 @error('name')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -89,7 +89,7 @@
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Şifre</label>
                 <input type="password" id="password" name="password" required autocomplete="new-password">
                 @error('password')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -98,7 +98,7 @@
 
             <!-- Confirm Password -->
             <div class="form-group">
-                <label for="password_confirmation">Confirm Password</label>
+                <label for="password_confirmation">Şifreyi Onaylayın</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required autocomplete="new-password">
                 @error('password_confirmation')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -106,11 +106,11 @@
             </div>
 
             <div class="form-group">
-                <button type="submit">Register</button>
+                <button type="submit">Kayıt Ol</button>
             </div>
 
             <a href="{{ route('login') }}">
-                Already registered?
+                Zaten kayıtlı mısınız?
             </a>
         </form>
     </div>
