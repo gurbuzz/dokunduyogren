@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->integer('page_number');
             $table->string('name');
-            $table->string('category');
             $table->string('tags');
             $table->string('image_url');
             $table->text('content');

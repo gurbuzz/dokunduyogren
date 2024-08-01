@@ -44,6 +44,7 @@
                         </div>
                         <button class="btn btn-primary mt-3" id="saveButton">Kaydet</button>
                         <button class="btn btn-danger mt-3" id="deleteButton">Seçilen Alanı Sil</button>
+                        <button class="btn btn-warning mt-3" id="resetButton">Sıfırla</button>
                         <button class="btn btn-success mt-3" id="finishButton">Bitir</button>
                     </div>
                 </div>
@@ -90,24 +91,24 @@
         var currentRect = null;
 
         canvas.on('mouse:down', function(o) {
-            if (!canvas.getActiveObject()) {
-                isDown = true;
-                var pointer = canvas.getPointer(o.e);
-                origX = pointer.x;
-                origY = pointer.y;
-                rect = new fabric.Rect({
-                    left: origX,
-                    top: origY,
-                    originX: 'left',
-                    originY: 'top',
-                    width: pointer.x - origX,
-                    height: pointer.y - origY,
-                    fill: 'rgba(255,0,0,0.3)',
-                    transparentCorners: false
-                });
-                canvas.add(rect);
-            }
+    if (!canvas.getActiveObject()) {
+        isDown = true;
+        var pointer = canvas.getPointer(o.e);
+        origX = pointer.x;
+        origY = pointer.y;
+        rect = new fabric.Rect({
+            left: origX,
+            top: origY,
+            originX: 'left',
+            originY: 'top',
+            width: pointer.x - origX,
+            height: pointer.y - origY,
+            fill: 'rgba(0, 0, 255, 0.3)', // Alanın rengini yarı saydam mavi yapar
+            transparentCorners: false
         });
+        canvas.add(rect);
+    }
+});
 
         canvas.on('mouse:move', function(o) {
             if (!isDown) return;
@@ -211,6 +212,12 @@
                 document.getElementById('labelInput').value = area.get('label') || '';
             });
         });
+        
+        document.getElementById('resetButton').addEventListener('click', function() {
+            location.reload();
+        });
+
+        
     </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

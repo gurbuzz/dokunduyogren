@@ -24,10 +24,6 @@
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div>
                             <div class="form-group">
-                                <label for="category">Kategori:</label>
-                                <input type="text" class="form-control" id="category" name="category" required>
-                            </div>
-                            <div class="form-group">
                                 <label for="tags">Etiketler:</label>
                                 <input type="text" class="form-control" id="tags" name="tags" required>
                             </div>

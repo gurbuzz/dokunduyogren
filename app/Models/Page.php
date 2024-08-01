@@ -12,7 +12,7 @@ class Page extends Model
     protected $primaryKey = 'page_id';
 
     protected $fillable = [
-        'book_id', 'name', 'category', 'tags', 'image_url', 'content', 'page_number'
+        'book_id', 'name','tags', 'image_url', 'content', 'page_number'
     ];
 
     public function book()

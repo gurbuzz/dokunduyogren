@@ -63,7 +63,7 @@
                 top: {{ $tag->position_y }},
                 width: {{ $tag->width }},
                 height: {{ $tag->height }},
-                fill: 'rgba(255, 0, 0, 0.5)',
+                fill: 'rgba(0, 0, 255, 0.3)',
                 hasControls: false,
                 hasBorders: false,
                 selectable: true,

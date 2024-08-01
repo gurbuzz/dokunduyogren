@@ -36,7 +36,6 @@ class PagesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
             'tags' => 'required|string|max:255',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
@@ -49,7 +48,6 @@ class PagesController extends Controller
 
         $page = Page::create([
             'name' => $request->name,
-            'category' => $request->category,
             'tags' => $request->tags,
             'image_url' => $imageName,
             'content' => $request->content,
@@ -66,7 +64,6 @@ class PagesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
             'tags' => 'required|string|max:255',
             'content' => 'required|string',
             'page_number' => 'required|integer',
@@ -84,7 +81,6 @@ class PagesController extends Controller
 
         $page->update([
             'name' => $request->name,
-            'category' => $request->category,
             'tags' => $request->tags,
             'content' => $request->content,
             'page_number' => $request->page_number,
@@ -111,7 +107,6 @@ class PagesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
             'tags' => 'required|string|max:255',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
@@ -123,7 +118,6 @@ class PagesController extends Controller
 
         $page = Page::create([
             'name' => $request->name,
-            'category' => $request->category,
             'tags' => $request->tags,
             'image_url' => $imageName,
             'content' => $request->content,

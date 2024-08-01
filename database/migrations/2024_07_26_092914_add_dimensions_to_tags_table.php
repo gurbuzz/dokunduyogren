@@ -1,12 +1,11 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-/**
+    /**
      * Run the migrations.
      *
      * @return void
@@ -14,10 +13,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tags', function (Blueprint $table) {
-            $table->integer('width')->nullable();
-            $table->integer('height')->nullable();
+            if (!Schema::hasColumn('tags', 'width')) {
+                $table->integer('width')->nullable();
+            }
+            if (!Schema::hasColumn('tags', 'height')) {
+                $table->integer('height')->nullable();
+            }
         });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -26,8 +30,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tags', function (Blueprint $table) {
-            $table->dropColumn('width');
-            $table->dropColumn('height');
+            if (Schema::hasColumn('tags', 'width')) {
+                $table->dropColumn('width');
+            }
+            if (Schema::hasColumn('tags', 'height')) {
+                $table->dropColumn('height');
+            }
         });
     }
 };
+
