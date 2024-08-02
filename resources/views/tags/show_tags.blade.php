@@ -12,8 +12,17 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h2>{{ $page->name }} Etiketleri</h2>
+                        <form action="{{ route('pages.show_tags', ['page' => $page->page_id]) }}" method="GET" class="form-inline">
+                            <label for="language" class="mr-2">Dil Seçimi:</label>
+                            <select id="language" name="language" class="form-control mr-2">
+                                <option value="en" {{ request('language') == 'en' ? 'selected' : '' }}>İngilizce</option>
+                                <option value="tr" {{ request('language') == 'tr' ? 'selected' : '' }}>Türkçe</option>
+                                <option value="fr" {{ request('language') == 'fr' ? 'selected' : '' }}>Fransızca</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Göster</button>
+                        </form>
                     </div>
                     <div class="card-body">
                         <canvas id="c" width="800" height="600"></canvas>
@@ -69,7 +78,10 @@
                 selectable: true,
                 evented: true
             });
-            rect.data = { label: "{{ $tag->label }}" };
+            @php
+                $label = request('language') && $tag->translated_language == request('language') ? $tag->translated_label : $tag->label;
+            @endphp
+            rect.data = { label: "{{ $label }}" };
             canvas.add(rect);
 
             rect.on('mousedown', function() {

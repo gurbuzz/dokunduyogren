@@ -86,9 +86,9 @@
                 <a href="{{ url('/books') }}">Kitap Listesi</a>
             </div>
         @else
-            <h2>Giriş Yapınız</h2>
+            <h3>Giriş Yapınız</h3>
         @endauth
-        <h1>DokunDuyOgren</h1>
+        <h2>DokunDuyOgren</h2>
     </div>
 
     <!-- Bootstrap JS (Optional, for better responsiveness) -->

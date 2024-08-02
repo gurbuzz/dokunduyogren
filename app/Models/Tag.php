@@ -18,6 +18,8 @@ class Tag extends Model
         'position_y',
         'width',
         'height',
+        'translated_label',
+        'translated_language',
     ];
 
     public function page()
@@ -25,3 +27,4 @@ class Tag extends Model
         return $this->belongsTo(Page::class, 'page_id', 'page_id');
     }
 }
+

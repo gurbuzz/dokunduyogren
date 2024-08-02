@@ -49,7 +49,7 @@
                                     <td>
                                         <a href="{{ route('pages.show_tags', ['page' => $page->page_id]) }}" class="btn btn-info btn-sm">Etiketleri Göster</a>
                                         <a href="{{ route('pages.edit', ['page' => $page->page_id]) }}" class="btn btn-warning btn-sm">Düzenle</a>
-                                        <button class="btn btn-success btn-sm">Çeviri</button>
+                                        <a href="{{ route('pages.translate_tags', ['page' => $page->page_id]) }}" class="btn btn-success btn-sm">Çeviri</a>
                                         <form action="{{ route('pages.destroy', ['page' => $page->page_id]) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')

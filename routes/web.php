@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pages/{page}/add_tags', [TagsController::class, 'create'])->name('pages.add_tags');
     Route::post('/pages/{page}/store_tags', [TagsController::class, 'storeTags'])->name('pages.store_tags');
 
+    Route::get('/pages/{page}/translate', [TagsController::class, 'showTranslateTags'])->name('pages.translate_tags');
+    Route::post('/pages/{page}/translate', [TagsController::class, 'storeTranslateTags'])->name('tags.translate.store');
+
 });
 
 require __DIR__.'/auth.php';
