@@ -51,11 +51,26 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light nav-bar-custom">
         <a class="navbar-brand" href="{{ url('/') }}">DokunDuyOgren</a>
         <div class="navbar-nav ml-auto">
-            <span class="nav-link">{{ Auth::user()->name }}</span>
-            <form method="POST" action="{{ route('logout') }}" class="form-inline">
-                @csrf
-                <button type="submit" class="btn btn-link nav-link" style="cursor: pointer;">Çıkış Yap</button>
-            </form>
+            @auth
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ url('/profile') }}">Profil Ayarları</a>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Çıkış Yap</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a class="nav-link" href="{{ route('login') }}">Giriş Yap</a>
+                @if (Route::has('register'))
+                    <a class="nav-link" href="{{ route('register') }}">Kayıt Ol</a>
+                @endif
+            @endauth
         </div>
     </nav>
 
