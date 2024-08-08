@@ -67,28 +67,58 @@
 
         @foreach($tags as $tag)
         (function() {
-            // Metadata sütunu ileride kullanılabilir
-            // var metadata = {!! json_encode($tag->metadata) !!};
             var position = {!! json_encode($tag->position) !!};
-            var rect = new fabric.Rect({
-                left: position.x,
-                top: position.y,
-                width: position.width,
-                height: position.height,
-                fill: 'rgba(0, 0, 255, 0.3)',
-                hasControls: false,
-                hasBorders: false,
-                selectable: true,
-                evented: true
-            });
+            var shape;
+            switch ("{{ $tag->shape_type }}") {
+                case 'circle':
+                    shape = new fabric.Circle({
+                        left: position.x,
+                        top: position.y,
+                        radius: position.radius,
+                        fill: 'rgba(0, 0, 255, 0.3)',
+                        hasControls: false,
+                        hasBorders: false,
+                        selectable: true,
+                        evented: true
+                    });
+                    break;
+                case 'triangle':
+                    shape = new fabric.Triangle({
+                        left: position.x,
+                        top: position.y,
+                        width: position.width,
+                        height: position.height,
+                        fill: 'rgba(0, 0, 255, 0.3)',
+                        hasControls: false,
+                        hasBorders: false,
+                        selectable: true,
+                        evented: true
+                    });
+                    break;
+                case 'rect':
+                default:
+                    shape = new fabric.Rect({
+                        left: position.x,
+                        top: position.y,
+                        width: position.width,
+                        height: position.height,
+                        fill: 'rgba(0, 0, 255, 0.3)',
+                        hasControls: false,
+                        hasBorders: false,
+                        selectable: true,
+                        evented: true
+                    });
+                    break;
+            }
+
             @php
                 $label = request('language') && $tag->label_info['translated_language'] == request('language') ? $tag->label_info['translated_label'] : $tag->label_info['label'];
             @endphp
-            rect.data = { label: "{{ $label }}" };
-            canvas.add(rect);
+            shape.data = { label: "{{ $label }}" };
+            canvas.add(shape);
 
-            rect.on('mousedown', function() {
-                document.getElementById('tagContent').innerText = rect.data.label;
+            shape.on('mousedown', function() {
+                document.getElementById('tagContent').innerText = shape.data.label;
                 $('#tagModal').modal('show');
             });
         })();

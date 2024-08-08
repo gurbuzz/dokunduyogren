@@ -63,7 +63,7 @@ class TagsController extends Controller
         $page = Page::findOrFail($page_id);
         return view('tags.create', compact('page'));
     }
-    
+
     public function storeTags(Request $request, $page_id)
     {
         $coordinates = json_decode($request->coordinates, true);
@@ -75,7 +75,9 @@ class TagsController extends Controller
                     'x' => $coord['x'],
                     'y' => $coord['y'],
                     'width' => $coord['width'],
-                    'height' => $coord['height']
+                    'height' => $coord['height'],
+                    'radius' => $coord['radius'] ?? null, // Circle için
+                    'points' => $coord['points'] ?? null // Polygon için
                 ],
                 'label_info' => [
                     'label' => $coord['label'] ?? ''
@@ -86,6 +88,7 @@ class TagsController extends Controller
 
         return response()->json(['message' => 'Etiketler başarıyla kaydedildi.'], 200);
     }
+
     public function showTags($pageId)
     {
         $page = Page::findOrFail($pageId);
@@ -106,32 +109,31 @@ class TagsController extends Controller
     {
         $translations = $request->input('tags');
         $language = $request->input('language');
-    
+
         Log::info('Received translations', ['translations' => $translations]);
         Log::info('Language selected', ['language' => $language]);
-    
+
         foreach ($translations as $tagId => $translatedLabel) {
             Log::info('Attempting to update tag', ['tag_id' => $tagId, 'translated_label' => $translatedLabel, 'translated_language' => $language]);
-    
+
             if ($tagId == 0) {
                 Log::error('Tag ID is 0, check form submission.');
                 continue;
             }
-    
+
             $tag = Tag::findOrFail($tagId);
             Log::info('Before updating tag', ['tag_id' => $tagId, 'current_label_info' => $tag->label_info]);
-    
+
             $labelInfo = $tag->label_info;
             $labelInfo['translated_label'] = $translatedLabel;
             $labelInfo['translated_language'] = $language;
             $tag->label_info = $labelInfo;
             $tag->save();
-    
+
             Log::info('After updating tag', ['tag_id' => $tagId, 'new_label_info' => $tag->label_info]);
         }
-    
+
         return redirect()->route('books.pages.index', ['book' => Page::findOrFail($pageId)->book_id])
                          ->with('success', 'Etiketler başarıyla güncellendi.');
     }
-
 }

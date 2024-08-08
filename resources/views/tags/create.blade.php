@@ -25,6 +25,13 @@
             text-align: center;
             color: #555;
         }
+        .shape-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .shape-buttons button {
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -39,6 +46,11 @@
                         <p class="instruction">
                             Etiket eklemek için, resim üzerinde bir alan seçin ve etiket bilgilerini girin. Seçilen alanları kaydetmek için "Kaydet" butonuna, silmek için "Seçilen Alanı Sil" butonuna tıklayın. İşlemi bitirmek için "Bitir" butonuna tıklayın.
                         </p>
+                        <div class="shape-buttons">
+                            <button class="btn btn-outline-primary" id="rectButton">Dikdörtgen</button>
+                            <button class="btn btn-outline-primary" id="circleButton">Daire</button>
+                            <button class="btn btn-outline-primary" id="triangleButton">Üçgen</button>
+                        </div>
                         <div class="canvas-container">
                             <canvas id="c" width="800" height="600"></canvas>
                         </div>
@@ -86,9 +98,22 @@
             canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
         });
 
-        var rect, isDown, origX, origY;
+        var isDown, origX, origY;
         var selectedAreas = [];
-        var currentRect = null;
+        var currentShape = null;
+        var shapeType = 'rect';
+
+        document.getElementById('rectButton').addEventListener('click', function() {
+            shapeType = 'rect';
+        });
+
+        document.getElementById('circleButton').addEventListener('click', function() {
+            shapeType = 'circle';
+        });
+
+        document.getElementById('triangleButton').addEventListener('click', function() {
+            shapeType = 'triangle';
+        });
 
         canvas.on('mouse:down', function(o) {
             if (!canvas.getActiveObject()) {
@@ -96,82 +121,125 @@
                 var pointer = canvas.getPointer(o.e);
                 origX = pointer.x;
                 origY = pointer.y;
-                rect = new fabric.Rect({
-                    left: origX,
-                    top: origY,
-                    originX: 'left',
-                    originY: 'top',
-                    width: pointer.x - origX,
-                    height: pointer.y - origY,
-                    fill: 'rgba(0, 0, 255, 0.3)', // Alanın rengini yarı saydam mavi yapar
-                    transparentCorners: false
-                });
-                canvas.add(rect);
+                switch (shapeType) {
+                    case 'rect':
+                        currentShape = new fabric.Rect({
+                            left: origX,
+                            top: origY,
+                            originX: 'left',
+                            originY: 'top',
+                            width: pointer.x - origX,
+                            height: pointer.y - origY,
+                            fill: 'rgba(0, 0, 255, 0.3)',
+                            transparentCorners: false
+                        });
+                        break;
+                    case 'circle':
+                        currentShape = new fabric.Circle({
+                            left: origX,
+                            top: origY,
+                            originX: 'left',
+                            originY: 'top',
+                            radius: 1,
+                            fill: 'rgba(0, 0, 255, 0.3)',
+                            transparentCorners: false
+                        });
+                        break;
+                    case 'triangle':
+                        currentShape = new fabric.Triangle({
+                            left: origX,
+                            top: origY,
+                            originX: 'left',
+                            originY: 'top',
+                            width: pointer.x - origX,
+                            height: pointer.y - origY,
+                            fill: 'rgba(0, 0, 255, 0.3)',
+                            transparentCorners: false
+                        });
+                        break;
+                }
+                canvas.add(currentShape);
             }
         });
 
         canvas.on('mouse:move', function(o) {
             if (!isDown) return;
             var pointer = canvas.getPointer(o.e);
-            if (origX > pointer.x) rect.set({ left: Math.abs(pointer.x) });
-            if (origY > pointer.y) rect.set({ top: Math.abs(pointer.y) });
-            rect.set({ width: Math.abs(origX - pointer.x) });
-            rect.set({ height: Math.abs(origY - pointer.y) });
+            switch (shapeType) {
+                case 'rect':
+                    if (origX > pointer.x) currentShape.set({ left: Math.abs(pointer.x) });
+                    if (origY > pointer.y) currentShape.set({ top: Math.abs(pointer.y) });
+                    currentShape.set({ width: Math.abs(origX - pointer.x) });
+                    currentShape.set({ height: Math.abs(origY - pointer.y) });
+                    break;
+                case 'circle':
+                    var radius = Math.max(Math.abs(origX - pointer.x), Math.abs(origY - pointer.y)) / 2;
+                    currentShape.set({ radius: radius });
+                    currentShape.set({ left: origX - radius, top: origY - radius });
+                    break;
+                case 'triangle':
+                    if (origX > pointer.x) currentShape.set({ left: Math.abs(pointer.x) });
+                    if (origY > pointer.y) currentShape.set({ top: Math.abs(pointer.y) });
+                    currentShape.set({ width: Math.abs(origX - pointer.x) });
+                    currentShape.set({ height: Math.abs(origY - pointer.y) });
+                    break;
+            }
             canvas.renderAll();
         });
 
         canvas.on('mouse:up', function() {
             isDown = false;
-            selectedAreas.push(rect);
-            currentRect = rect;
+            selectedAreas.push(currentShape);
             $('#labelModal').modal('show');
             document.getElementById('labelInput').value = '';
-            canvas.setActiveObject(rect);
+            canvas.setActiveObject(currentShape);
         });
 
         document.getElementById('saveLabel').addEventListener('click', function() {
             var labelValue = document.getElementById('labelInput').value;
-            if (labelValue && currentRect) {
-                currentRect.set('label', labelValue);
+            if (labelValue && currentShape) {
+                currentShape.set('label', labelValue);
                 $('#labelModal').modal('hide');
                 canvas.renderAll();
-                currentRect = null;
+                currentShape = null;
             }
         });
+
         document.getElementById('saveButton').addEventListener('click', function() {
-    alert('Alanlar kaydedildi!');
-    selectedAreas.forEach(function(area) {
-        area.set({ selectable: true, evented: true });
-    });
-    canvas.discardActiveObject();
-    canvas.renderAll();
+            alert('Alanlar kaydedildi!');
+            selectedAreas.forEach(function(area) {
+                area.set({ selectable: true, evented: true });
+            });
+            canvas.discardActiveObject();
+            canvas.renderAll();
 
-    // Alanları backend'e gönder
-    var coordinates = selectedAreas.map(function(area) {
-        return {
-            x: area.left,
-            y: area.top,
-            width: area.width * area.scaleX,
-            height: area.height * area.scaleY,
-            label: area.get('label') // Label değerinin gönderildiğinden emin olun
-        };
-    });
+            var coordinates = selectedAreas.map(function(area) {
+                return {
+                    x: area.left,
+                    y: area.top,
+                    width: area.width * area.scaleX || null,
+                    height: area.height * area.scaleY || null,
+                    radius: area.radius || null,
+                    label: area.get('label'),
+                    shape_type: area.type
+                };
+            });
 
-    $.ajax({
-        url: '{{ route("pages.store_tags", ["page" => $page->page_id]) }}',
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            coordinates: JSON.stringify(coordinates)
-        },
-        success: function(response) {
-            console.log('Etiketler kaydedildi:', response);
-        },
-        error: function(xhr, status, error) {
-            console.error('Kaydetme hatası:', error);
-        }
-    });
-});
+            $.ajax({
+                url: '{{ route("pages.store_tags", ["page" => $page->page_id]) }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    coordinates: JSON.stringify(coordinates)
+                },
+                success: function(response) {
+                    console.log('Etiketler kaydedildi:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Kaydetme hatası:', error);
+                }
+            });
+        });
 
         document.getElementById('deleteButton').addEventListener('click', function() {
             var activeObject = canvas.getActiveObject();
@@ -183,33 +251,6 @@
 
         document.getElementById('finishButton').addEventListener('click', function() {
             window.location.href = "{{ route('books.pages.index', ['book' => $page->book_id]) }}";
-        });
-
-        canvas.on('object:added', function() {
-            canvas.setActiveObject(rect);
-            rect.setCoords();
-            canvas.renderAll();
-        });
-
-        canvas.on('object:moving', function(e) {
-            var obj = e.target;
-            obj.setCoords();
-            var objBoundingBox = obj.getBoundingRect();
-            if (objBoundingBox.left < 0 || objBoundingBox.top < 0 || objBoundingBox.left + objBoundingBox.width > canvas.width || objBoundingBox.top + objBoundingBox.height > canvas.height) {
-                obj.left = Math.max(objBoundingBox.left, 0);
-                obj.top = Math.max(objBoundingBox.top, 0);
-                obj.left = Math.min(objBoundingBox.left, canvas.width - objBoundingBox.width);
-                obj.top = Math.min(objBoundingBox.top, canvas.height - objBoundingBox.height);
-            }
-        });
-
-        // Her bir alan tıklanabilir ve silinebilir olmalıdır
-        selectedAreas.forEach(function(area) {
-            area.on('selected', function() {
-                currentRect = area;
-                $('#labelModal').modal('show');
-                document.getElementById('labelInput').value = area.get('label') || '';
-            });
         });
 
         document.getElementById('resetButton').addEventListener('click', function() {
