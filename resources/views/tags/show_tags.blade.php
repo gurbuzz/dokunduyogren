@@ -67,11 +67,14 @@
 
         @foreach($tags as $tag)
         (function() {
+            // Metadata sütunu ileride kullanılabilir
+            // var metadata = {!! json_encode($tag->metadata) !!};
+            var position = {!! json_encode($tag->position) !!};
             var rect = new fabric.Rect({
-                left: {{ $tag->position_x }},
-                top: {{ $tag->position_y }},
-                width: {{ $tag->width }},
-                height: {{ $tag->height }},
+                left: position.x,
+                top: position.y,
+                width: position.width,
+                height: position.height,
                 fill: 'rgba(0, 0, 255, 0.3)',
                 hasControls: false,
                 hasBorders: false,
@@ -79,7 +82,7 @@
                 evented: true
             });
             @php
-                $label = request('language') && $tag->translated_language == request('language') ? $tag->translated_label : $tag->label;
+                $label = request('language') && $tag->label_info['translated_language'] == request('language') ? $tag->label_info['translated_label'] : $tag->label_info['label'];
             @endphp
             rect.data = { label: "{{ $label }}" };
             canvas.add(rect);

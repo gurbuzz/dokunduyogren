@@ -12,9 +12,9 @@ return new class extends Migration {
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->integer('page_number');
             $table->string('name');
-            $table->string('tags');
             $table->string('image_url');
             $table->text('content');
+            $table->json('metadata')->nullable(); // Add metadata column
             $table->timestamps();
         });
     }

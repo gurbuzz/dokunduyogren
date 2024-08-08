@@ -10,7 +10,11 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'author', 'published_date', 'isbn', 'cover_image'
+        'title', 'description', 'author', 'published_date', 'isbn', 'cover_image', 'category', 'additional_info'
+    ];
+
+    protected $casts = [
+        'additional_info' => 'json',
     ];
 
     public function pages()

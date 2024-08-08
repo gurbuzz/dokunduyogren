@@ -12,7 +12,11 @@ class Page extends Model
     protected $primaryKey = 'page_id';
 
     protected $fillable = [
-        'book_id', 'name','tags', 'image_url', 'content', 'page_number'
+        'book_id', 'name', 'image_url', 'content', 'page_number', 'metadata'
+    ];
+
+    protected $casts = [
+        'metadata' => 'json',
     ];
 
     public function book()

@@ -12,14 +12,12 @@ class Tag extends Model
     protected $primaryKey = 'tag_id';
 
     protected $fillable = [
-        'page_id',
-        'label',
-        'position_x',
-        'position_y',
-        'width',
-        'height',
-        'translated_label',
-        'translated_language',
+        'page_id', 'label_info', 'position', 'shape_type'
+    ];
+
+    protected $casts = [
+        'label_info' => 'array',
+        'position' => 'array',
     ];
 
     public function page()
@@ -27,4 +25,3 @@ class Tag extends Model
         return $this->belongsTo(Page::class, 'page_id', 'page_id');
     }
 }
-

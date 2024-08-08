@@ -91,24 +91,24 @@
         var currentRect = null;
 
         canvas.on('mouse:down', function(o) {
-    if (!canvas.getActiveObject()) {
-        isDown = true;
-        var pointer = canvas.getPointer(o.e);
-        origX = pointer.x;
-        origY = pointer.y;
-        rect = new fabric.Rect({
-            left: origX,
-            top: origY,
-            originX: 'left',
-            originY: 'top',
-            width: pointer.x - origX,
-            height: pointer.y - origY,
-            fill: 'rgba(0, 0, 255, 0.3)', // Alanın rengini yarı saydam mavi yapar
-            transparentCorners: false
+            if (!canvas.getActiveObject()) {
+                isDown = true;
+                var pointer = canvas.getPointer(o.e);
+                origX = pointer.x;
+                origY = pointer.y;
+                rect = new fabric.Rect({
+                    left: origX,
+                    top: origY,
+                    originX: 'left',
+                    originY: 'top',
+                    width: pointer.x - origX,
+                    height: pointer.y - origY,
+                    fill: 'rgba(0, 0, 255, 0.3)', // Alanın rengini yarı saydam mavi yapar
+                    transparentCorners: false
+                });
+                canvas.add(rect);
+            }
         });
-        canvas.add(rect);
-    }
-});
 
         canvas.on('mouse:move', function(o) {
             if (!isDown) return;
@@ -138,41 +138,40 @@
                 currentRect = null;
             }
         });
-
         document.getElementById('saveButton').addEventListener('click', function() {
-            alert('Alanlar kaydedildi!');
-            selectedAreas.forEach(function(area) {
-                area.set({ selectable: true, evented: true });
-            });
-            canvas.discardActiveObject();
-            canvas.renderAll();
+    alert('Alanlar kaydedildi!');
+    selectedAreas.forEach(function(area) {
+        area.set({ selectable: true, evented: true });
+    });
+    canvas.discardActiveObject();
+    canvas.renderAll();
 
-            // Alanları backend'e gönder
-            var coordinates = selectedAreas.map(function(area) {
-                return {
-                    x: area.left,
-                    y: area.top,
-                    width: area.width * area.scaleX,
-                    height: area.height * area.scaleY,
-                    label: area.get('label') // Label değerinin gönderildiğinden emin olun
-                };
-            });
+    // Alanları backend'e gönder
+    var coordinates = selectedAreas.map(function(area) {
+        return {
+            x: area.left,
+            y: area.top,
+            width: area.width * area.scaleX,
+            height: area.height * area.scaleY,
+            label: area.get('label') // Label değerinin gönderildiğinden emin olun
+        };
+    });
 
-            $.ajax({
-                url: '{{ route("pages.store_tags", ["page" => $page->page_id]) }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    coordinates: JSON.stringify(coordinates)
-                },
-                success: function(response) {
-                    console.log('Etiketler kaydedildi:', response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Kaydetme hatası:', error);
-                }
-            });
-        });
+    $.ajax({
+        url: '{{ route("pages.store_tags", ["page" => $page->page_id]) }}',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            coordinates: JSON.stringify(coordinates)
+        },
+        success: function(response) {
+            console.log('Etiketler kaydedildi:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Kaydetme hatası:', error);
+        }
+    });
+});
 
         document.getElementById('deleteButton').addEventListener('click', function() {
             var activeObject = canvas.getActiveObject();
@@ -212,12 +211,10 @@
                 document.getElementById('labelInput').value = area.get('label') || '';
             });
         });
-        
+
         document.getElementById('resetButton').addEventListener('click', function() {
             location.reload();
         });
-
-        
     </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

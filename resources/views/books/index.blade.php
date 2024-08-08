@@ -81,9 +81,10 @@
             <thead>
                 <tr>
                     <th>Kapak Resmi</th>
-                    <th>Kİtap Adı</th>
+                    <th>Kitap Adı</th>
                     <th>Yazar</th>
                     <th>Yayın Tarihi</th>
+                    <th>Kategori</th>
                     <th>İşlemler</th>
                 </tr>
             </thead>
@@ -94,6 +95,7 @@
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->author }}</td>
                     <td>{{ $book->published_date }}</td>
+                    <td>{{ $book->category }}</td>
                     <td>
                         <a href="{{ route('books.pages.index', $book->id) }}" class="btn btn-info">Sayfalar</a>
                         <a href="{{ route('books.edit', $book->id) }}" class="btn btn-warning">Düzenle</a>

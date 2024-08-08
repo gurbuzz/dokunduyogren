@@ -24,10 +24,6 @@
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div>
                             <div class="form-group">
-                                <label for="tags">Etiketler:</label>
-                                <input type="text" class="form-control" id="tags" name="tags" required>
-                            </div>
-                            <div class="form-group">
                                 <label for="image_url">Resim Yükle:</label>
                                 <input type="file" class="form-control-file" id="image_url" name="image_url" required>
                             </div>
@@ -39,6 +35,13 @@
                                 <label for="page_number">Sayfa Numarası:</label>
                                 <input type="number" class="form-control" id="page_number" name="page_number" required>
                             </div>
+                            <!-- Metadata alanı ileride kullanılabilir -->
+                            <!--
+                            <div class="form-group">
+                                <label for="metadata">Metadata:</label>
+                                <textarea class="form-control" id="metadata" name="metadata" rows="3"></textarea>
+                            </div>
+                            -->
                             <button type="submit" class="btn btn-primary">İleri</button>
                         </form>
                     </div>

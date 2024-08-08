@@ -14,7 +14,9 @@ return new class extends Migration {
             $table->string('author')->nullable();
             $table->date('published_date')->nullable();
             $table->string('isbn')->nullable();
+            $table->string('category')->nullable();
             $table->string('cover_image')->nullable();
+            $table->json('additional_info')->nullable(); // Add additional_info column
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
+
 class BookController extends Controller
 {
     public function index()
@@ -26,6 +27,8 @@ class BookController extends Controller
             'published_date' => 'required|date',
             'isbn' => 'required|string|max:13',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'category' => 'nullable|string|max:255',
+            'additional_info' => 'nullable|json',
         ]);
 
         $coverImageName = null;
@@ -40,6 +43,8 @@ class BookController extends Controller
         $book->published_date = $request->published_date;
         $book->isbn = $request->isbn;
         $book->cover_image = $coverImageName;
+        $book->category = $request->category;
+        $book->additional_info = json_decode($request->additional_info, true);
         $book->save();
 
         return redirect()->route('books.index')->with('success', 'Kitap başarıyla oluşturuldu.');
@@ -59,6 +64,8 @@ class BookController extends Controller
             'published_date' => 'required|date',
             'isbn' => 'required|string|max:13',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'category' => 'nullable|string|max:255',
+            'additional_info' => 'nullable|json',
         ]);
 
         $book = Book::findOrFail($id);
@@ -73,6 +80,8 @@ class BookController extends Controller
             'author' => $request->author,
             'published_date' => $request->published_date,
             'isbn' => $request->isbn,
+            'category' => $request->category,
+            'additional_info' => json_decode($request->additional_info, true),
         ]);
 
         return redirect()->route('books.index')->with('success', 'Kitap başarıyla güncellendi.');

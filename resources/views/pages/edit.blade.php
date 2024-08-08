@@ -40,6 +40,13 @@
                                 <label for="page_number">Sayfa Numarası</label>
                                 <input type="number" class="form-control" id="page_number" name="page_number" value="{{ $page->page_number }}" required>
                             </div>
+                            <!-- Metadata alanı ileride kullanılabilir -->
+                            <!--
+                            <div class="form-group">
+                                <label for="metadata">Metadata:</label>
+                                <textarea class="form-control" id="metadata" name="metadata" rows="3">{{ $page->metadata }}</textarea>
+                            </div>
+                            -->
                             <button type="submit" class="btn btn-primary">Güncelle</button>
                             <a href="{{ route('books.pages.index', $page->book_id) }}" class="btn btn-secondary">İptal</a>
                         </form>

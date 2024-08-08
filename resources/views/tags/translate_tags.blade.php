@@ -41,10 +41,10 @@
                             @foreach ($tags as $tag)
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <textarea id="tag-{{ $tag->tag_id }}" class="form-control" disabled>{{ $tag->label }}</textarea>
+                                    <textarea id="tag-{{ $tag->tag_id }}" class="form-control" disabled>{{ $tag->label_info['label'] }}</textarea>
                                 </div>
                                 <div class="col-md-6">
-                                    <textarea id="translated-tag-{{ $tag->tag_id }}" name="tags[{{ $tag->tag_id }}]" class="form-control">{{ $tag->translated_label ?? '' }}</textarea>
+                                    <textarea id="translated-tag-{{ $tag->tag_id }}" name="tags[{{ $tag->tag_id }}]" class="form-control">{{ $tag->label_info['translated_label'] ?? '' }}</textarea>
                                 </div>
                             </div>
                             @endforeach

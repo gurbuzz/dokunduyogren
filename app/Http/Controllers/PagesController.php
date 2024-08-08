@@ -24,8 +24,6 @@ class PagesController extends Controller
         $book = Book::findOrFail($bookId);
         return view('pages.create', compact('book'));
     }
-    
-    
 
     public function edit(Page $page)
     {
@@ -36,11 +34,11 @@ class PagesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'tags' => 'required|string|max:255',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
             'page_number' => 'required|integer',
             'book_id' => 'required|exists:books,id',
+            // 'metadata' => 'nullable|json', // Metadata sütunu ileride kullanılabilir
         ]);
 
         $imageName = time().'.'.$request->image_url->getClientOriginalExtension();  
@@ -48,11 +46,11 @@ class PagesController extends Controller
 
         $page = Page::create([
             'name' => $request->name,
-            'tags' => $request->tags,
             'image_url' => $imageName,
             'content' => $request->content,
             'page_number' => $request->page_number,
             'book_id' => $request->book_id,
+            // 'metadata' => json_decode($request->metadata, true), // Metadata sütunu ileride kullanılabilir
         ]);
 
         Log::info('Created Page ID: ' . $page->page_id);
@@ -64,10 +62,10 @@ class PagesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'tags' => 'required|string|max:255',
             'content' => 'required|string',
             'page_number' => 'required|integer',
             'book_id' => 'required|exists:books,id',
+            // 'metadata' => 'nullable|json', // Metadata sütunu ileride kullanılabilir
         ]);
 
         if ($request->hasFile('image_url')) {
@@ -81,10 +79,10 @@ class PagesController extends Controller
 
         $page->update([
             'name' => $request->name,
-            'tags' => $request->tags,
             'content' => $request->content,
             'page_number' => $request->page_number,
             'book_id' => $request->book_id,
+            // 'metadata' => json_decode($request->metadata, true), // Metadata sütunu ileride kullanılabilir
         ]);
 
         return redirect()->route('books.pages.index', $page->book_id)->with('success', 'Sayfa başarıyla güncellendi.');
@@ -107,10 +105,10 @@ class PagesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'tags' => 'required|string|max:255',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
             'page_number' => 'required|integer',
+            // 'metadata' => 'nullable|json', // Metadata sütunu ileride kullanılabilir
         ]);
 
         $imageName = time().'.'.$request->image_url->extension();  
@@ -118,11 +116,11 @@ class PagesController extends Controller
 
         $page = Page::create([
             'name' => $request->name,
-            'tags' => $request->tags,
             'image_url' => $imageName,
             'content' => $request->content,
             'page_number' => $request->page_number,
             'book_id' => $bookId,
+            // 'metadata' => json_decode($request->metadata, true), // Metadata sütunu ileride kullanılabilir
         ]);
 
         Log::info('Created Page ID: ' . $page->page_id);
@@ -136,7 +134,7 @@ class PagesController extends Controller
         $tags = Tag::where('page_id', $pageId)->get();
         return view('pages.create_qrcode', compact('page', 'tags'));
     }
-    
+
     public function storeQRCode(Request $request, Page $page)
     {
         // Dosya boyutu ve formatını kontrol eden validasyon
@@ -170,5 +168,4 @@ class PagesController extends Controller
         return redirect()->route('pages.add_tags', ['page' => $page->page_id])
             ->with('success', 'Sayfa başarıyla oluşturuldu ve QR kod eklendi.');
     }
-
 }
