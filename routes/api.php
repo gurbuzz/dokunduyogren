@@ -1,29 +1,38 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BookController;  // Güncelledik
-use App\Http\Controllers\PagesController;
-use App\Http\Controllers\TagsController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\API\ApiBookController;
+use App\Http\Controllers\API\ApiPagesController;
+use App\Http\Controllers\API\ApiTagsController;
+use App\Http\Controllers\API\ApiAuthController;
 
-Route::post('/users/register', [AuthenticatedSessionController::class, 'register']);
-Route::post('/users/login', [AuthenticatedSessionController::class, 'store']);
-Route::post('/users/logout', [AuthenticatedSessionController::class, 'destroy']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/books', [BookController::class, 'store']);
-    Route::get('/books', [BookController::class, 'index']);
-    Route::get('/books/{book_id}', [BookController::class, 'show']);
-    Route::put('/books/{book_id}', [BookController::class, 'update']);
-    Route::delete('/books/{book_id}', [BookController::class, 'destroy']);
+Route::prefix('v1')->group(function () {
+    Route::post('/users/register', [ApiAuthController::class, 'register']);
+    Route::post('/users/login', [ApiAuthController::class, 'login']);
 
-    Route::post('/pages', [PagesController::class, 'store']);
-    Route::get('/pages/{page_id}', [PagesController::class, 'show']);
-    Route::put('/pages/{page_id}', [PagesController::class, 'update']);
-    Route::delete('/pages/{page_id}', [PagesController::class, 'destroy']);
+    Route::middleware('auth:sanctum')->group(function () {
+         Route::post('/users/logout', [ApiAuthController::class, 'logout']);
 
-    Route::post('/tags', [TagsController::class, 'store']);
-    Route::get('/tags/{page_id}', [TagsController::class, 'index']);
-    Route::put('/tags/{tag_id}', [TagsController::class, 'update']);
-    Route::delete('/tags/{tag_id}', [TagsController::class, 'destroy']);
+        Route::post('/books', [ApiBookController::class, 'store']);
+        Route::get('/books', [ApiBookController::class, 'index']);
+        Route::get('/books/{book_id}', [ApiBookController::class, 'show']);
+        Route::put('/books/{book_id}', [ApiBookController::class, 'update']);
+        Route::delete('/books/{book_id}', [ApiBookController::class, 'destroy']);
+
+        Route::post('/pages', [ApiPagesController::class, 'store']);
+        Route::get('/books/{book_id}/pages', [ApiPagesController::class, 'index']);
+        Route::get('/pages/{page_id}', [ApiPagesController::class, 'show']);
+        Route::put('/pages/{page_id}', [ApiPagesController::class, 'update']);
+        Route::delete('/pages/{page_id}', [ApiPagesController::class, 'destroy']);
+        Route::post('/pages/{page_id}/store_qrcode', [ApiPagesController::class, 'storeQRCode']);
+
+        Route::post('/tags', [ApiTagsController::class, 'store']);
+        Route::get('/tags/{page_id}', [ApiTagsController::class, 'index']);
+        Route::put('/tags/{tag_id}', [ApiTagsController::class, 'update']);
+        Route::delete('/tags/{tag_id}', [ApiTagsController::class, 'destroy']);
+        Route::post('/tags/{page_id}/store_tags', [ApiTagsController::class, 'storeTags']);
+        Route::post('/tags/{page_id}/translate', [ApiTagsController::class, 'storeTranslateTags']);
+    });
 });
+
