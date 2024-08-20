@@ -91,6 +91,31 @@ class ApiAuthController extends Controller
             return response()->json(['message' => 'User is not authenticated or token not found'], 401);
         }
     }
-    
+    public function register(Request $request)
+{
+    // Validasyon
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // Yeni kullanıcı oluşturma
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+    ]);
+
+    // Token oluşturma
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    // JSON olarak cevap dönme
+    return response()->json([
+        'message' => 'Registration successful',
+        'token' => $token,
+    ], 201);
+}
+
     
 }
