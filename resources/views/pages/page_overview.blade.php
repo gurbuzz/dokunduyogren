@@ -81,7 +81,6 @@
                 <tr>
                     <th>Sayfa Numarası</th>
                     <th>Sayfa İsmi</th>
-                    <th>Etiketler</th>
                     <th>İçerik</th>
                     <th>Resim</th>
                     <th>İşlemler</th>
@@ -92,7 +91,6 @@
                 <tr>
                     <td>{{ $page->page_number }}</td>
                     <td>{{ $page->name }}</td>
-                    <td>{{ $page->tags }}</td>
                     <td>{{ $page->content }}</td>
                     <td><img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 150px; height: 100px;"></td>
                     <td>
