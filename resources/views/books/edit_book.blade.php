@@ -16,7 +16,7 @@
                         <a href="{{ url()->previous() }}" class="btn btn-secondary">Geri</a>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('books.update', ['book' => $book->id]) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('books.update', ['id' => $book->id]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="form-group">

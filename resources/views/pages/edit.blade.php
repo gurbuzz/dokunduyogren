@@ -24,10 +24,6 @@
                                 <input type="text" class="form-control" id="name" name="name" value="{{ $page->name }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="tags">Etiket İsmi</label>
-                                <input type="text" class="form-control" id="tags" name="tags" value="{{ $page->tags }}" required>
-                            </div>
-                            <div class="form-group">
                                 <label for="image_url">Resim Yükle</label>
                                 <input type="file" class="form-control-file" id="image_url" name="image_url">
                                 <img src="{{ asset('images/' . $page->image_url) }}" alt="Image" style="width: 100%; height: auto; margin-top: 10px;">
