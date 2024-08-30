@@ -12,7 +12,13 @@ use App\Http\Controllers\Pages\PageManagementController;
 use App\Http\Controllers\Pages\PageViewController;
 use App\Http\Controllers\Pages\PageCreationController;
 use App\Http\Controllers\Pages\PageQRCodeController;
+use App\Http\Controllers\Admin\AdminController; // AdminController dosyanız burada yer alacak
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Middlewares\RoleMiddleware;
+
+
 
 Route::get('/', function () {
     return view('public.home');
@@ -50,11 +56,19 @@ Route::middleware('auth')->group(function () {
     // Etiket ekleme rotaları
     Route::get('/pages/{page}/add_tags', [TagCreationController::class, 'create'])->name('pages.add_tags');
     Route::post('/pages/{page}/store_tags', [TagCreationController::class, 'storeTags'])->name('pages.store_tags');
-    route::get('/pages/{page}/tags', [TagViewController::class, 'showTags'])->name('pages.show_tags');
+    Route::get('/pages/{page}/tags', [TagViewController::class, 'showTags'])->name('pages.show_tags');
 
     // Etiket çeviri rotaları
     Route::get('/pages/{page}/translate', [TagTranslationController::class, 'showTranslateTags'])->name('pages.translate_tags');
     Route::post('/pages/{page}/translate', [TagTranslationController::class, 'storeTranslateTags'])->name('tags.translate.store');
+    // Admin rotaları
+    Route::middleware('role:admin')->group(function () {
+        // Kullanıcı yönetimi
+        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index');
+        Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
+        Route::patch('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
+        Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

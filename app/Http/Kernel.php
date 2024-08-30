@@ -3,6 +3,10 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Middlewares\RoleMiddleware;
+
+
 
 class Kernel extends HttpKernel
 {
@@ -64,5 +68,14 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\CheckForAnyToken::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+
     ];
+    public function __construct()
+    {
+        Log::info('Middleware Tanımlandı:', ['role' => \Spatie\Permission\Middlewares\RoleMiddleware::class]);
+    }
 }
