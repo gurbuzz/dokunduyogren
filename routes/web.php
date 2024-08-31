@@ -26,49 +26,58 @@ Route::get('/', function () {
 
 Route::get('/books', [BookViewController::class, 'index'])->middleware(['auth', 'verified'])->name('books.index');
 
-// Kullanıcı yetkilendirme ile korunan rotalar grubu
 Route::middleware('auth')->group(function () {
-    // Profil rotaları
+
+    // Profil rotaları (Tüm roller erişebilir)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Sayfa rotaları
-    Route::get('/books/{book}/pages', [PageViewController::class, 'index'])->name('books.pages.index');
-    Route::get('/pages/create/{book}', [PageCreationController::class, 'create'])->name('pages.create');
-    Route::post('/pages', [PageCreationController::class, 'store'])->name('pages.store');
-    Route::get('/pages/{page}/edit', [PageManagementController::class, 'edit'])->name('pages.edit');
-    Route::patch('/pages/{page}', [PageManagementController::class, 'update'])->name('pages.update');
-    Route::delete('/pages/{page}', [PageManagementController::class, 'destroy'])->name('pages.destroy');
+    // Kitap ve sayfa görüntüleme rotaları (viewer, editor ve admin erişebilir)
+    Route::middleware(['role:viewer|editor|admin'])->group(function () {
+        Route::get('/books', [BookViewController::class, 'index'])->name('books.index');
+        Route::get('/books/{book}/pages', [PageViewController::class, 'index'])->name('books.pages.index');
+        Route::get('/pages/{page}/tags', [TagViewController::class, 'showTags'])->name('pages.show_tags');
+    });
 
-    Route::get('/books/{book}/pages/create', [PageCreationController::class, 'createForBook'])->name('books.pages.create');
-    Route::post('/books/{book}/pages', [PageCreationController::class, 'storeForBook'])->name('books.pages.store');
-    Route::get('/pages/{page}/create_qrcode', [PageQRCodeController::class, 'createQRCode'])->name('pages.create.qrcode');
-    Route::post('/pages/{page}/store_qrcode', [PageQRCodeController::class, 'storeQRCode'])->name('pages.store.qrcode');
+    // Kitap ve sayfa düzenleme rotaları (sadece editor ve admin erişebilir)
+    Route::middleware(['role:editor|admin'])->group(function () {
+        Route::get('/books/create', [BookCreationController::class, 'create'])->name('books.create');
+        Route::post('/books', [BookCreationController::class, 'store'])->name('books.store');
+        Route::get('/books/{id}/edit', [BookManagementController::class, 'edit'])->name('books.edit');
+        Route::match(['put', 'patch'], '/books/{id}', [BookManagementController::class, 'update'])->name('books.update');
+        Route::delete('/books/{id}', [BookManagementController::class, 'destroy'])->name('books.destroy');
+        
+        
+        
+        Route::post('/books/{book}/pages', [PageCreationController::class, 'store'])->name('books.pages.store');
+        Route::get('/pages/create/{book}', [PageCreationController::class, 'create'])->name('pages.create');
+        Route::get('/books/{book}/pages/create', [PageCreationController::class, 'create'])->name('books.pages.create');
+        Route::post('/pages', [PageCreationController::class, 'store'])->name('pages.store');
+        Route::get('/pages/{page}/edit', [PageManagementController::class, 'edit'])->name('pages.edit');
 
-    // Kitap ve sayfa görüntüleme rotaları
-    Route::get('/books/create', [BookCreationController::class, 'create'])->name('books.create');
-    Route::post('/books', [BookCreationController::class, 'store'])->name('books.store');
-    Route::get('/books/{id}/edit', [BookManagementController::class, 'edit'])->name('books.edit');
-    Route::match(['put', 'patch'], '/books/{id}', [BookManagementController::class, 'update'])->name('books.update');
-    Route::delete('/books/{id}', [BookManagementController::class, 'destroy'])->name('books.destroy');
+        Route::patch('/pages/{page}', [PageManagementController::class, 'update'])->name('pages.update');
+        Route::delete('/pages/{page}', [PageManagementController::class, 'destroy'])->name('pages.destroy');
+        
 
-    // Etiket ekleme rotaları
-    Route::get('/pages/{page}/add_tags', [TagCreationController::class, 'create'])->name('pages.add_tags');
-    Route::post('/pages/{page}/store_tags', [TagCreationController::class, 'storeTags'])->name('pages.store_tags');
-    Route::get('/pages/{page}/tags', [TagViewController::class, 'showTags'])->name('pages.show_tags');
+        Route::get('/pages/{page}/add_tags', [TagCreationController::class, 'create'])->name('pages.add_tags');
+        Route::post('/pages/{page}/store_tags', [TagCreationController::class, 'storeTags'])->name('pages.store_tags');
+        Route::get('/pages/{page}/translate', [TagTranslationController::class, 'showTranslateTags'])->name('pages.translate_tags');
+        Route::post('/pages/{page}/translate', [TagTranslationController::class, 'storeTranslateTags'])->name('tags.translate.store');
 
-    // Etiket çeviri rotaları
-    Route::get('/pages/{page}/translate', [TagTranslationController::class, 'showTranslateTags'])->name('pages.translate_tags');
-    Route::post('/pages/{page}/translate', [TagTranslationController::class, 'storeTranslateTags'])->name('tags.translate.store');
-    // Admin rotaları
+        Route::get('/pages/{page}/create_qrcode', [PageQRCodeController::class, 'createQRCode'])->name('pages.create.qrcode');
+        route::post('/pages/{page}/store_qrcode', [PageQRCodeController::class, 'storeQRCode'])->name('pages.store.qrcode');
+    });
+    // Admin rotaları (sadece admin erişebilir)
     Route::middleware('role:admin')->group(function () {
-        // Kullanıcı yönetimi
         Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index');
         Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
         Route::patch('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
         Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+
     });
 });
+
+
 
 require __DIR__.'/auth.php';

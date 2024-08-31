@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
@@ -28,6 +27,10 @@ class PageCreationController extends Controller
 
         $imageName = time().'.'.$request->image_url->getClientOriginalExtension();  
         $request->image_url->storeAs('public/images', $imageName);
+        $request->image_url->move(public_path('images'), $imageName);
+
+
+        Log::info('Image Uploaded: ' . $imageName . ' stored at public/images/' . $imageName);
 
         $page = Page::create([
             'name' => $request->name,
@@ -59,6 +62,9 @@ class PageCreationController extends Controller
 
         $imageName = time().'.'.$request->image_url->extension();  
         $request->image_url->move(public_path('images'), $imageName);
+
+
+        Log::info('Image Uploaded: ' . $imageName . ' stored at public/images/' . $imageName);
 
         $page = Page::create([
             'name' => $request->name,
