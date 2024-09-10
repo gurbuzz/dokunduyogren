@@ -9,6 +9,8 @@ DokunDuyOgren, görme engelli çocuklar için etkileşimli bir öğrenme platfor
 - **Sesli Etiketleme:** Sayfalardaki görsellere sesli etiketler eklenebilir.
 - **QR Kod Entegrasyonu:** Sayfalara QR kodlar eklenerek mobil uygulama üzerinden erişim sağlanabilir.
 - **Kullanıcı Yönetimi:** Eğitimciler ve öğrenciler için kullanıcı hesapları oluşturulabilir ve yönetilebilir.
+- **Rol Tabanlı Erişim Kontrolü:** Kullanıcılara admin, editor, viewer gibi roller atanabilir ve bu roller sayesinde sistemdeki farklı yetkilere sahip olabilirler.
+
 
 ## Kurulum
 
@@ -24,43 +26,66 @@ Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları izleyi
 ### Adımlar
 
 1. **Depoyu klonlayın:**
-    ```bash
+
     git clone https://github.com/kullanici_adiniz/dokunduuyogren.git
     cd dokunduuyogren
-    ```
+
 
 2. **Gerekli bağımlılıkları yükleyin:**
-    ```bash
+
     composer install
     npm install
     npm run dev
-    ```
+
 
 3. **.env dosyasını yapılandırın:**
     `.env.example` dosyasını kopyalayarak `.env` dosyasını oluşturun ve gerekli veritabanı yapılandırmalarını yapın.
-    ```bash
+
     cp .env.example .env
     php artisan key:generate
-    ```
+
 
 4. **Veritabanını oluşturun ve migrasyonları çalıştırın:**
-    ```bash
+
     php artisan migrate
     php artisan db:seed
-    ```
+
 
 5. **Sunucuyu başlatın:**
-    ```bash
+
     php artisan serve
-    ```
+
 
 6. **Tarayıcınızda projeyi açın:**
     `http://localhost:8000`
 
 ## Kullanım
 
-### Kitap Oluşturma ve Sayfa Ekleme
+### Admin Ekleme ve Rol Atama### 
+    Proje, kullanıcılar için rol tabanlı yetkilendirme sağlar. Admin, editor ve viewer gibi roller sayesinde kullanıcıların,erişebilecekleri özellikler kontrol edilebilir. Yeni bir admin kullanıcı eklemek ve rol atamak için şu adımları izleyin:
+    
+- **Admin Rolü Oluşturma**
+    php artisan tinker
+    use Spatie\Permission\Models\Role;
+    Role::create(['name' => 'admin']);
 
+- **Yeni Bir Admin Kullanıcısı Oluşturma**
+    use App\Models\User;
+    $admin = User::create([
+        'name' => 'Admin Name',
+        'email' => 'admin@example.com',
+        'password' => bcrypt('password123'), // Şifrenizi belirleyin
+    ]);
+    $admin->assignRole('admin');
+
+- **Mevcut Bir Kullanıcıya Rol Atama**
+
+    use App\Models\User;
+    $user = User::find(1); // 1 yerine kullanıcı ID'sini girin
+    $user->assignRole('admin'); // Kullanıcıya admin rolünü atayın
+
+
+### Kitap Oluşturma ve Sayfa Ekleme
 1. **Kitap Oluşturma:**
     - Ana sayfada "Kitap Ekle" butonuna tıklayın.
     - Kitap başlığı, yazar adı ve açıklama gibi bilgileri girin.
