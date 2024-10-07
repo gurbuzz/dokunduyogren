@@ -61,9 +61,10 @@ Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları izleyi
 
 ## Kullanım
 
-### Admin Ekleme ve Rol Atama### 
+### Admin Ekleme ve Rol Atama
+
     Proje, kullanıcılar için rol tabanlı yetkilendirme sağlar. Admin, editor ve viewer gibi roller sayesinde kullanıcıların,erişebilecekleri özellikler kontrol edilebilir. Yeni bir admin kullanıcı eklemek ve rol atamak için şu adımları izleyin:
-    
+
 - **Admin Rolü Oluşturma**
     php artisan tinker
     use Spatie\Permission\Models\Role;
